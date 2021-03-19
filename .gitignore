@@ -19,6 +19,20 @@ target/
 *.iml
 *.ipr
 
+### Eclipse ###
+
+.metadata
+bin/
+tmp/
+*.tmp
+*.bak
+*.swp
+*~.nib
+local.properties
+.settings/
+.loadpath
+.recommenders
+
 ### NetBeans ###
 /nbproject/private/
 /nbbuild/
@@ -31,3 +45,4 @@ build/
 
 ### VS Code ###
 .vscode/
+/hs_err_pid35588.log
