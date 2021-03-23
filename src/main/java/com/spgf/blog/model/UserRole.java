@@ -1,6 +1,7 @@
 package com.spgf.blog.model;
 
-import javax.persistence.Column;
+import java.io.Serializable;
+
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -9,28 +10,37 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Entity
-public class UserRole {
+public class UserRole implements Serializable {
+
+	private static final long serialVersionUID = 98516951961L;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	@Column(updatable = false, nullable = false)
 	private long userRoleId;
-	
+
 	@ManyToOne
 	@JoinColumn(name = "user_id")
-	private User user;
-	
+	@JsonIgnore
+	private User User;
+
 	@ManyToOne(fetch = FetchType.EAGER)
+	@JoinColumn(name = "role_id")
 	private Role role;
 
 	public UserRole() {
 	}
 
-	public UserRole(long userRoleId, User user, Role role) {
-		super();
+	public UserRole(long userRoleId, User User, Role role) {
 		this.userRoleId = userRoleId;
-		this.user = user;
+		this.User = User;
+		this.role = role;
+	}
+
+	public UserRole(User User, Role role) {
+		this.User = User;
 		this.role = role;
 	}
 
@@ -43,11 +53,11 @@ public class UserRole {
 	}
 
 	public User getUser() {
-		return user;
+		return User;
 	}
 
-	public void setUser(User user) {
-		this.user = user;
+	public void setUser(User User) {
+		this.User = User;
 	}
 
 	public Role getRole() {
@@ -57,5 +67,4 @@ public class UserRole {
 	public void setRole(Role role) {
 		this.role = role;
 	}
-
 }

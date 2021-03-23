@@ -1,5 +1,8 @@
 package com.spgf.blog.model;
 
+import java.io.Serializable;
+import java.util.Date;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -7,36 +10,38 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
 @Entity
-public class Comment {
+public class Comment implements Serializable{
+
+	private static final long serialVersionUID = 3420915524015874967L;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	@Column(updatable = false, nullable = false)
-	private Integer id;
+	private Long id;
 	
 	private String username;
 	
 	@Column(columnDefinition = "text")
 	private String content;
 	
-	private String postedDatge;
+	private Date postedDate;
 
 	public Comment() {
 
 	}
 
-	public Comment(Integer id, String username, String content, String postedDatge) {
+	public Comment(Long id, String username, String content, Date postedDatge) {
 		this.id = id;
 		this.username = username;
 		this.content = content;
-		this.postedDatge = postedDatge;
+		this.postedDate = postedDatge;
 	}
 
-	public Integer getId() {
+	public Long getId() {
 		return id;
 	}
 
-	public void setId(Integer id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 
@@ -56,12 +61,12 @@ public class Comment {
 		this.content = content;
 	}
 
-	public String getPostedDatge() {
-		return postedDatge;
+	public Date getPostedDate() {
+		return postedDate;
 	}
 
-	public void setPostedDatge(String postedDatge) {
-		this.postedDatge = postedDatge;
+	public void setPostedDate(Date postedDate) {
+		this.postedDate = postedDate;
 	}
 
 }

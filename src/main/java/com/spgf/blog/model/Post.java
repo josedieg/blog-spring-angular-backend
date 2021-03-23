@@ -1,7 +1,10 @@
 package com.spgf.blog.model;
 
+import java.io.Serializable;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Stream;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -13,51 +16,60 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 
+import org.hibernate.annotations.CreationTimestamp;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Entity
-public class Post {
+public class Post implements Serializable {
+
+	private static final long serialVersionUID = 34546474787L;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	@Column(updatable = false, nullable = false)
-	private Integer id;
-	
+	@Column(nullable = false, updatable = false)
+	private Long id;
+
 	private String name;
-	
+
 	@Column(columnDefinition = "text")
 	private String caption;
-	
+
+	private String username;
 	private String location;
-	
+
+	private Long userImageId;
+
 	private int likes;
-	
+
+	@CreationTimestamp
 	private Date postedDate;
-	
-	private Integer userImageId;
-	
+
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-	@JoinColumn(name = "post_id")
+	//@JoinColumn(name = "post_id")
 	private List<Comment> commentList;
 
 	public Post() {
 	}
 
-	public Post(Integer id, String name, String caption, String location, int likes, Date postedDate,
-			Integer userImageId, List<Comment> commentList) {
+	public Post(Long id, String name, String caption, String username, Long userImageId, int likes,
+			Date postedDate, List<Comment> commentList) {
+		super();
 		this.id = id;
 		this.name = name;
 		this.caption = caption;
-		this.location = location;
+		this.username = username;
+		this.userImageId = userImageId;
 		this.likes = likes;
 		this.postedDate = postedDate;
-		this.userImageId = userImageId;
 		this.commentList = commentList;
 	}
 
-	public Integer getId() {
+	public Long getId() {
 		return id;
 	}
 
-	public void setId(Integer id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 
@@ -69,14 +81,6 @@ public class Post {
 		this.name = name;
 	}
 
-	public String getCaption() {
-		return caption;
-	}
-
-	public void setCaption(String caption) {
-		this.caption = caption;
-	}
-
 	public String getLocation() {
 		return location;
 	}
@@ -85,12 +89,36 @@ public class Post {
 		this.location = location;
 	}
 
+	public String getCaption() {
+		return caption;
+	}
+
+	public void setCaption(String caption) {
+		this.caption = caption;
+	}
+
+	public String getUsername() {
+		return username;
+	}
+
+	public void setUsername(String username) {
+		this.username = username;
+	}
+
+	public Long getUserImageId() {
+		return userImageId;
+	}
+
+	public void setUserImageId(Long userImageId) {
+		this.userImageId = userImageId;
+	}
+
 	public int getLikes() {
 		return likes;
 	}
 
 	public void setLikes(int likes) {
-		this.likes = likes;
+		this.likes += likes;
 	}
 
 	public Date getPostedDate() {
@@ -101,20 +129,25 @@ public class Post {
 		this.postedDate = postedDate;
 	}
 
-	public Integer getUserImageId() {
-		return userImageId;
+	public Stream<Comment> getCommentList() {
+		if (commentList != null) {
+			return commentList.stream().sorted(Comparator.comparing(Comment::getPostedDate));
+		}
+		return null;
 	}
 
-	public void setUserImageId(Integer userImageId) {
-		this.userImageId = userImageId;
+	@JsonIgnore
+	public void setComments(Comment comment) {
+		if (comment != null) {
+			this.commentList.add(comment);
+		}
 	}
 
-	public List<Comment> getCommentList() {
-		return commentList;
-	}
-
-	public void setCommentList(List<Comment> commentList) {
-		this.commentList = commentList;
+	@Override
+	public String toString() {
+		return "Post [id=" + id + ", name=" + name + ", caption=" + caption + ", username=" + username + ", location="
+				+ location + ", userImageId=" + userImageId + ", likes=" + likes + ", postedDate=" + postedDate
+				+ ", commentList=" + commentList + "]";
 	}
 
 }
